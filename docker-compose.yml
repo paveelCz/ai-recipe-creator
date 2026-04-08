@@ -1,0 +1,26 @@
+services:
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+
+  app:
+    build: .
+    ports:
+      - "6767:6767"
+    environment:
+      - PORT=6767
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - CHROMA_URL=http://chromadb:8000
+      - OLLAMA_MODEL=gemma3:1b
+    depends_on:
+      - chromadb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  chroma-data:

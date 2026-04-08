@@ -1,0 +1,13 @@
+{
+  "name": "recipe-rag",
+  "version": "1.0.0",
+  "description": "RAG-powered recipe finder using Ollama and ChromaDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "chromadb": "^1.9.2",
+    "express": "^4.18.2"
+  }
+}
