@@ -88,4 +88,4 @@ recipe-rag/
 | `OLLAMA_URL`   | `http://localhost:11434`      | Ollama server URL       |
 | `CHROMA_URL`   | `http://localhost:8000`       | ChromaDB server URL     |
 | `OLLAMA_MODEL` | `gemma3:1b`                   | LLM model to use        |
-| `PORT`         | `3000`                        | App port                |
+| `PORT`         | `6767`                        | App port                |
