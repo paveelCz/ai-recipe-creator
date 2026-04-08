@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const { ChromaClient } = require("chromadb");
 const fs = require("fs");
@@ -46,7 +47,7 @@ async function initChroma() {
 
   collection = await client.getOrCreateCollection({ name: COLLECTION_NAME });
   const count = await collection.count();
-  
+
   if (count === 0) {
     console.log("✅ Collection is empty — seeding...");
     await seedRecipes();
@@ -193,7 +194,7 @@ app.get("/api/cuisines", (req, res) => {
 
 // ── Start ────────────────────────────────────────────────────────────────────
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 6767;
 
 async function start() {
   console.log("⏳ Connecting to ChromaDB...");
