@@ -1,0 +1,3 @@
+curently uses dataset https://www.kaggle.com/datasets/thedevastator/better-recipes-for-a-better-life?select=recipes.csv
+has 1000 recipes
+for better results use larger dataset 
