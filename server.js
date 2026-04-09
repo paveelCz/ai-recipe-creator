@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
-const CHROMA_URL = process.env.CHROMA_URL || "http://localhost:8000";
+const CHROMA_URL = process.env.CHROMA_URL || "http://127.0.0.1:8000";
 const EMBED_MODEL = process.env.EMBED_MODEL || "text-embedding-3-small";
 const CHAT_MODEL = process.env.CHAT_MODEL || "gpt-3.5-turbo";
 const COLLECTION_NAME = "recipes_v2";
