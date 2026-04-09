@@ -7,7 +7,7 @@ services:
       - chroma-data:/chroma/chroma
     environment:
       - IS_PERSISTENT=TRUE
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=*
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=TRUE
 
   app:
     build: .
