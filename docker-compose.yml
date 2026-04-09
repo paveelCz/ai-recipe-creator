@@ -12,15 +12,13 @@ services:
     build: .
     ports:
       - "6767:6767"
+    env_file:
+      - .env
     environment:
       - PORT=6767
-      - OLLAMA_URL=http://host.docker.internal:11434
       - CHROMA_URL=http://chromadb:8000
-      - OLLAMA_MODEL=gemma3:1b
     depends_on:
       - chromadb
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
 volumes:
   chroma-data:

@@ -7,36 +7,46 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
+const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const CHROMA_URL = process.env.CHROMA_URL || "http://localhost:8000";
-const EMBED_MODEL = "nomic-embed-text";
-const CHAT_MODEL = process.env.OLLAMA_MODEL || "llama3.2";
+const EMBED_MODEL = process.env.EMBED_MODEL || "text-embedding-3-small";
+const CHAT_MODEL = process.env.CHAT_MODEL || "gpt-3.5-turbo";
 const COLLECTION_NAME = "recipes_v2";
 
 let collection;
 
-// ── Ollama helpers ──────────────────────────────────────────────────────────
+// ── OpenAI helpers ──────────────────────────────────────────────────────────
 
 async function getEmbedding(text) {
-  const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
+  const res = await fetch(`${OPENAI_BASE_URL}/embeddings`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: EMBED_MODEL, prompt: text }),
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({ model: EMBED_MODEL, input: text }),
   });
   if (!res.ok) throw new Error(`Embedding failed: ${res.statusText}`);
   const data = await res.json();
-  return data.embedding;
+  return data.data[0].embedding;
 }
 
-async function chatWithOllama(prompt) {
-  const res = await fetch(`${OLLAMA_URL}/api/generate`, {
+async function chatWithOpenAI(prompt) {
+  const res = await fetch(`${OPENAI_BASE_URL}/chat/completions`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: CHAT_MODEL, prompt, stream: false }),
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: CHAT_MODEL,
+      messages: [{ role: "user", content: prompt }]
+    }),
   });
   if (!res.ok) throw new Error(`Chat failed: ${res.statusText}`);
   const data = await res.json();
-  return data.response;
+  return data.choices[0].message.content;
 }
 
 // ── ChromaDB setup ──────────────────────────────────────────────────────────
@@ -115,7 +125,7 @@ app.post("/api/search", async (req, res) => {
 
     const contextRecipes = results.documents[0].join("\n\n---\n\n");
 
-    // 3. Ask Ollama to suggest a recipe using the retrieved context
+    // 3. Ask OpenAI to suggest a recipe using the retrieved context
     const prompt = `You are a helpful cooking assistant. Based on the following recipes from our database, suggest the best recipe for someone who has these ingredients: ${ingredients}.
 
 Here are relevant recipes from our database:
@@ -123,7 +133,7 @@ ${contextRecipes}
 
 Give a clear, friendly suggestion. If one of the database recipes fits well, recommend it and give the full instructions. If none fit perfectly, suggest a variation using the closest recipe as a base. Keep it concise.`;
 
-    const answer = await chatWithOllama(prompt);
+    const answer = await chatWithOpenAI(prompt);
     res.json({ answer, context: results.metadatas[0].map((m) => m.title) });
   } catch (err) {
     console.error(err);
