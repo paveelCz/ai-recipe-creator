@@ -9,12 +9,6 @@ services:
       - IS_PERSISTENT=TRUE
       - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
       - ANONYMIZED_TELEMETRY=False
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
 
   app:
     build: .
@@ -26,8 +20,7 @@ services:
       - PORT=6767
       - CHROMA_URL=http://chromadb:8000
     depends_on:
-      chromadb:
-        condition: service_healthy
+      - chromadb
 
 volumes:
   chroma-data:
