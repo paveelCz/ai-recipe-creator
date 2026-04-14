@@ -7,20 +7,27 @@ services:
       - chroma-data:/chroma/chroma
     environment:
       - IS_PERSISTENT=TRUE
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
+      - ANONYMIZED_TELEMETRY=False
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   app:
     build: .
     ports:
       - "6767:6767"
+    env_file:
+      - .env
     environment:
       - PORT=6767
-      - OLLAMA_URL=http://host.docker.internal:11434
       - CHROMA_URL=http://chromadb:8000
-      - OLLAMA_MODEL=gemma3:1b
     depends_on:
-      - chromadb
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      chromadb:
+        condition: service_healthy
 
 volumes:
   chroma-data:
