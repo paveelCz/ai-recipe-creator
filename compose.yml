@@ -17,5 +17,9 @@ services:
     environment:
       - PORT=6767
       - CHROMA_URL=http://chromadb:8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
+      - EMBED_MODEL=${EMBED_MODEL:-}
+      - CHAT_MODEL=${CHAT_MODEL:-}
     depends_on:
       - chromadb
