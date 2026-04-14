@@ -1,13 +1,4 @@
 services:
-  chromadb:
-    image: chromadb/chroma:latest
-    ports:
-      - "8555:8000"
-    environment:
-      - IS_PERSISTENT=TRUE
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
-      - ANONYMIZED_TELEMETRY=False
-
   app:
     build: .
     ports:
@@ -16,8 +7,5 @@ services:
       - .env
     environment:
       - PORT=6767
-      - CHROMA_URL=http://chromadb:8000
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_BASE_URL=${OPENAI_BASE_URL}
-    depends_on:
-      - chromadb
