@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
-const CHAT_MODEL = process.env.CHAT_MODEL || "gpt-3.5-turbo";
+const CHAT_MODEL = process.env.CHAT_MODEL || "gemma3:27b";
 
 // In-memory array storing all recipes
 let database = [];
