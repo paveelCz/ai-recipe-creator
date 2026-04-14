@@ -3,8 +3,6 @@ services:
     image: chromadb/chroma:latest
     ports:
       - "8555:8000"
-    volumes:
-      - chroma-data:/chroma/chroma
     environment:
       - IS_PERSISTENT=TRUE
       - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
@@ -21,6 +19,3 @@ services:
       - CHROMA_URL=http://chromadb:8000
     depends_on:
       - chromadb
-
-volumes:
-  chroma-data:
