@@ -7,8 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || process.env.API_URL || "https://kurim.ithope.eu/v1";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.API_KEY || "";
 const CHAT_MODEL = process.env.CHAT_MODEL || "gemma3:27b";
 
 // In-memory array storing all recipes
@@ -28,7 +28,14 @@ async function chatWithOpenAI(prompt) {
       messages: [{ role: "user", content: prompt }]
     }),
   });
-  if (!res.ok) throw new Error(`Chat failed: ${res.statusText}`);
+  
+  if (!res.ok) {
+    const isBlank = !OPENAI_API_KEY || OPENAI_API_KEY.trim() === "";
+    const maskedKey = isBlank ? "BLANK/EMPTY" : `...${OPENAI_API_KEY.slice(-4)}`;
+    const bodyStr = await res.text();
+    throw new Error(`Chat failed: ${res.statusText} | URL: ${OPENAI_BASE_URL} | Key: ${maskedKey} | Model: ${CHAT_MODEL} | Server Response: ${bodyStr}`);
+  }
+  
   const data = await res.json();
   return data.choices[0].message.content;
 }
