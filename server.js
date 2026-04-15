@@ -9,7 +9,8 @@ app.use(express.static("public"));
 
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || process.env.API_URL || "https://kurim.ithope.eu/v1";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.API_KEY || "";
-const CHAT_MODEL = process.env.CHAT_MODEL || "gemma3:27b";
+let CHAT_MODEL = process.env.CHAT_MODEL || "gemma3:27b";
+if (CHAT_MODEL === "${CHAT_MODEL}") CHAT_MODEL = "gemma3:27b";
 
 // In-memory array storing all recipes
 let database = [];

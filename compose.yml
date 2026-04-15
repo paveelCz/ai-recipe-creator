@@ -9,4 +9,3 @@ services:
       - PORT=6767
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_BASE_URL=${OPENAI_BASE_URL}
-      - CHAT_MODEL=${CHAT_MODEL}
